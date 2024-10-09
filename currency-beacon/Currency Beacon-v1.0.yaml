@@ -1,0 +1,261 @@
+openapi: 3.0.1
+info:
+  title: Currency Beacon
+  version: v1.0
+servers:
+ -
+  url: /
+security:
+ -
+  default: []
+paths:
+  /latest:
+    get:
+      summary: Real-time rates of all currencies
+      description: This endpoint provides real-time rates of all currencies we support. Please note that these are mid-market rates and margins are typically added by our users before consumers have access to this endpoint. The endpoint requires the base currency and a list of symbols to be returned. You can refer to a list all supported currencies here.
+      parameters:
+       -
+        name: base
+        in: query
+        description: The base currency you would like to use for your rates.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: symbols
+        in: query
+        description: A list of currencies you will like to see the rates for. You can refer to a list all supported currencies here.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ok
+      security:
+       -
+        default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+         - oauth2
+        optional: false
+  /historical:
+    get:
+      summary: Historical exchange rate data for every past day
+      description: "This service provides historical exchange rate data for every past day all the way back to the year of 1996. Historical rates may be accessed by simply attaching the date parameter with a valid date (Format: YYYY-MM-DD) to the API's historical endpoint. We support the base currency and list of symbols to be returned. "
+      parameters:
+       -
+        name: base
+        in: query
+        description: The base currency you would like to use for your rates.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: date
+        in: query
+        description: The historical date you wouldlike to access.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: symbols
+        in: query
+        description: A list of currencies you will like to see the rates for.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ok
+      security:
+       -
+        default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+         - oauth2
+        optional: false
+  /timeseries:
+    get:
+      summary: Request historical exchange rates for a time-period of your choice
+      description: "If you have the startup or the professional plan, then you have access to the timeframe API service, you may request historical exchange rates for a time-period of your choice. To use this endpoint, simply specify your preferred time frame, consisting of a start_date and an end_date, both of the format YYYY-MM-DD."
+      parameters:
+       -
+        name: base
+        in: query
+        description: The base currency you would like to use for your rates.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: start_date
+        in: query
+        description: The start date for the time series you would like to access
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: end_date
+        in: query
+        description: The end date for the time series you would like to access
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: symbols
+        in: query
+        description: A list of currencies you will like to see the rates for.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ok
+      security:
+       -
+        default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+         - oauth2
+        optional: false
+  /currencies:
+    get:
+      summary: Currencies and the list of countries
+      description: This endpoint gives you access to all the currencies we support together with the name of the currencies and the list of countries that use that currency.
+      parameters:
+       -
+        name: type
+        in: query
+        description: "The type of currencies, eitheer fiat or crypto"
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ok
+      security:
+       -
+        default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+         - oauth2
+        optional: false
+  /convert:
+    get:
+      summary: Single currency conversion
+      description: "Using the convert endpoint, you may request our API to perform a Single currency conversion on your behalf. To use this endpoint, simply specify a from currency code, a to Currency Code, and the amount you would like to convert."
+      parameters:
+       -
+        name: from
+        in: query
+        description: The base currency you would like to use for your rates.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: to
+        in: query
+        description: The currency you would like to convert to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+       -
+        name: amount
+        in: query
+        description: The amount to convert
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ok
+      security:
+       -
+        default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+         - oauth2
+        optional: false
+components:
+  securitySchemes:
+    default:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://test.com
+          scopes: {}
+x-wso2-api-key-header: ApiKey
+x-wso2-auth-header: Authorization
+x-wso2-cors:
+  corsConfigurationEnabled: false
+  accessControlAllowOrigins:
+   - '*'
+  accessControlAllowCredentials: false
+  accessControlAllowHeaders:
+   - authorization
+   - Access-Control-Allow-Origin
+   - Content-Type
+   - SOAPAction
+   - apikey
+   - Internal-Key
+  accessControlAllowMethods:
+   - GET
+   - PUT
+   - POST
+   - DELETE
+   - PATCH
+   - OPTIONS
+x-wso2-production-endpoints:
+  urls:
+   - https://api.currencybeacon.com/v1
+  type: http
+x-wso2-sandbox-endpoints:
+  urls:
+   - https://api.currencybeacon.com/v1
+  type: http
+x-wso2-basePath: /currency-beacon/v1.0
+x-wso2-transports:
+ - http
+ - https
+x-wso2-application-security:
+  security-types:
+   - oauth2
+  optional: false
+x-wso2-response-cache:
+  enabled: false
+  cacheTimeoutInSeconds: 300

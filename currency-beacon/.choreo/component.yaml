@@ -1,0 +1,6 @@
+schemaVersion: 1.0
+proxy:
+  name: currency-beacon-api
+  schemaFilePath: Currency Beacon-v1.0.yaml
+  thumbnailPath: /test
+  docPath: /doctest
