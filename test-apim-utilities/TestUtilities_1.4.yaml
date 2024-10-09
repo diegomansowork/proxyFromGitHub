@@ -1,0 +1,325 @@
+openapi: 3.0.1
+info:
+  title: TestUtilities
+  description: This API could be used to test your API Manager or API Project
+  contact:
+    name: Diego Manso
+    email: diegomansowork@outlook.es
+  version: '1.1'
+servers:
+  - url: 'http://localhost:8080'
+    description: local
+security:
+  - default: []
+paths:
+  /items:
+    get:
+      tags: []
+      summary: Get All Items
+      description: Retrieve a list with all Items.
+      operationId: get-Items
+      parameters:
+        - name: delayInSeconds
+          in: query
+          description: Delay to be applied
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+              examples:
+                Get Item ID 1:
+                  value:
+                    - id: 1
+                      name: pencil
+                      vendorId: 123
+                      modelYear: 2004
+                      listPrice: 12.45
+                      dateCreated: '2024-02-19T18:02:13.125+00:00'
+                      lastModified: '2024-02-19T18:02:13.126+00:00'
+                    - itemId: 2
+                      name: table
+                      vendorId: 1543
+                      modelYear: 2013
+                      listPrice: 1244.32
+                      dateCreated: '2024-02-19T18:02:13.158+00:00'
+                      lastModified: '2024-02-19T18:02:13.158+00:00'
+      x-auth-type: Application & Application User
+    post:
+      summary: Create new Item
+      operationId: post-items-itemId
+      requestBody:
+        $ref: '#/components/requestBodies/InputItem'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Example 1:
+                  value:
+                    itemId: 1
+                    name: pencil
+                    vendorId: 123
+                    modelYear: 2004
+                    listPrice: 12.45
+                    dateCreated: '2024-02-20T08:26:37.089+00:00'
+                    lastModified: '2024-02-20T08:26:37.089+00:00'
+        '400':
+          description: Bad Request
+      security:
+        - default:
+            - bo-rol-access-management-api_products_global_admin_shared
+      x-auth-type: Application & Application User
+  '/items/{itemId}':
+    get:
+      tags: []
+      summary: Get Item Info by Item ID
+      description: Retrieve the information of the Item with the matching Item ID.
+      operationId: get-Items-ItemId
+      parameters:
+        - name: delayInSeconds
+          in: query
+          description: Delay to be applied
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Get Item ID 1:
+                  value:
+                    itemId: 1
+                    name: Pencil
+                    vendorId: 3
+                    modelYear: 1998
+                    listPrice: 2.65
+                    dateCreated: '2024-02-19T18:02:13.125+00:00'
+                    lastModified: '2024-02-19T18:02:13.126+00:00'
+        '404':
+          description: Item Not Found
+      x-auth-type: Application & Application User
+    put:
+      summary: Modify/update item
+      operationId: put-items-itemId
+      requestBody:
+        $ref: '#/components/requestBodies/InputItem'
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Item Not Found
+      x-auth-type: Application & Application User
+    delete:
+      summary: delete Item
+      operationId: delete-items-itemId
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Item Not Found
+      security:
+        - default:
+            - ejemplo-de-shared-scope
+            - bo-rol-access-management-api_products_global_admin_shared
+      x-auth-type: Application & Application User
+    parameters:
+      - name: itemId
+        in: path
+        description: ItemId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+  /echo:
+    get:
+      tags: []
+      summary: Your GET endpoint
+      operationId: get-echo
+      responses:
+        '200':
+          description: OK
+      x-auth-type: None
+  /randomSized:
+    get:
+      tags: []
+      summary: Your GET endpoint
+      operationId: get-randomSized
+      parameters:
+        - name: size
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomSizedResponse'
+      x-auth-type: Application & Application User
+components:
+  schemas:
+    Item:
+      title: Item
+      required:
+        - dateCreated
+        - itemId
+        - lastModified
+        - listPrice
+        - modelYear
+        - name
+        - vendorId
+      type: object
+      properties:
+        itemId:
+          type: integer
+          description: Unique identifier for the given Item.
+        name:
+          type: string
+          description: Item description.
+        vendorId:
+          type: integer
+          description: Vendor id.
+        modelYear:
+          type: integer
+          description: Item model year.
+        listPrice:
+          type: number
+          description: Item Prize.
+        dateCreated:
+          type: string
+          x-stoplight:
+            id: gffhjfqb9nfo3
+        lastModified:
+          type: string
+          x-stoplight:
+            id: tdayuj1jei2lj
+      description: Item object
+      x-examples:
+        - itemId: 1
+          name: pencil
+          vendorId: 123
+          modelYear: 2004
+          listPrice: 12.45
+          dateCreated: '2024-02-20T08:26:37.089+00:00'
+          lastModified: '2024-02-20T08:26:37.089+00:00'
+    ItemInput:
+      title: Item Input
+      required:
+        - listPrice
+        - modelYear
+        - name
+        - vendorId
+      type: object
+      properties:
+        name:
+          type: string
+          description: Item description.
+        vendorId:
+          type: integer
+          description: Vendor id.
+        modelYear:
+          type: integer
+          description: Item model year.
+        listPrice:
+          type: number
+          description: Item Prize.
+      description: Item input object
+      x-examples:
+        - name: Pencil
+          vendorId: 4
+          modelYear: 1998
+          listPrice: 2.65
+    CustomSizedResponse:
+      type: object
+      properties:
+        size:
+          type: integer
+        responseData:
+          type: string
+      x-examples:
+        Example 1:
+          size: 1024
+          responseData: >-
+            cguugtypiwbjlflcqzqmdnisiknxjlkjgfoyuqhvpsvhrmudqkmilxuupgylszgalhxezmypodzvxscezgbctvkazsabqnyejgwuowsexkfaontwroryifmtszpirxtowxuagpaeuayzhzwrudzhwlivsllosbbeqgxtkebrrpdxiplnryovjsfalrtysogoiusiolvtpusbrhgswbkncsbfpihhmobocsranpmxgtmprpbwejhivvlunlelfxyjnjrjhyxynpndxlrwvlbrkruvgxtxknbizffwpqxneqsqorrhowulguchymkagcponxbmrfsuvuyswgdvjjsqayzyilyuirhtdxpnmgkndmthmmogkagirvzaufrcdmdkjnyoyfjcwczvnhiafcygmolcirilozpmpnpiknusfxzpmxtdpjnzdnrulccwgwjbrilyqbcivtgapikspxgslmfovcbngeohjusovydviyyrftknmediwwuzlaflzpvztyeskjhfvrqemmlxhurhtetrdlhrbuwghsgaqajezyzgzjheywxuykhelakrxatenklzkmqgqmvoduhgnyfsmhrwjmsatvzvvhzbvzedydumkjpakvbvvvhcnxwtetsnjjekitvyvwvlkebgywasiwnczqgeuxqqaxuziizrbmxacfuqijxkzfrqxoxqsjhmgpflspvkvloxmxnqkdodtojxnssmfxvnuaznqsgeekdnocamrmjsrtkjifdempiievdhrliowigfxcjftqxyeiuwealrozvftczmlahmcyatvaigyinxvbavouwyiecrxgahrrpxlrgwngwpljnezcmkixinlyxaqclazztclnuxnowkclkgrncthcwbcawaahsouoykztbgmsoviwhdkzdtrkntydqlrq
+  requestBodies:
+    InputItem:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ItemInput'
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://test.com/oauth2/authorize'
+          tokenUrl: 'https://test.com/oauth2/token'
+          scopes:
+            bo-rol-access-management-api_products_global_admin_shared: shared bo
+          x-scopes-bindings:
+            bo-rol-access-management-api_products_global_admin_shared: AQF2ADGlobalshared
+        clientCredentials:
+          tokenUrl: 'https://test.com/oauth2/token'
+          scopes:
+            ejemplo-de-shared-scope: Un scope desc mas lartga
+          x-scopes-bindings:
+            ejemplo-de-shared-scope: AQF2ADGlobalshared
+x-wso2-auth-header: Authorization
+x-wso2-cors:
+  corsConfigurationEnabled: false
+  accessControlAllowOrigins:
+    - '*'
+  accessControlAllowCredentials: false
+  accessControlAllowHeaders:
+    - authorization
+    - Access-Control-Allow-Origin
+    - Content-Type
+    - SOAPAction
+    - apikey
+    - Internal-Key
+  accessControlAllowMethods:
+    - GET
+    - PUT
+    - POST
+    - DELETE
+    - PATCH
+    - OPTIONS
+x-wso2-production-endpoints:
+  urls:
+    - 'http://localhost:8080'
+  type: http
+x-wso2-sandbox-endpoints:
+  urls:
+    - 'http://localhost:8080'
+  type: http
+x-wso2-basePath: /test-diego/1.1
+x-wso2-transports:
+  - http
+  - https
+x-wso2-response-cache:
+  enabled: false
+  cacheTimeoutInSeconds: 300

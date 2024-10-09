@@ -1,0 +1,6 @@
+schemaVersion: 1.0
+proxy:
+  name: TestUtilities
+  schemaFilePath: TestUtilities_1.4.yaml
+  thumbnailPath: /inv-api/assets/thumbnail.png
+  docPath: /inv-api/assets/documents
